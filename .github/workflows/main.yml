@@ -33,9 +33,30 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v3.0.0
         with:
-           file: ./Dockerfile
-           context: ./
+           file: ./src/Dockerfile
+           context: ./src
            push: true
            tags: |
             ruimarquesbb/kube-news:latest
             ruimarquesbb/kube-news:${{github.run_number}}
+            
+  CD:
+  
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Kubernetes Set Context
+            uses: Azure/k8s-set-context@v2
+            with:
+              method: kubeconfig
+              kubeconfig: ${{secrets.K8S_CONFIG}}
+              
+     - name: Deploy to Kubernetes cluster
+           uses: Azure/k8s-deploy@v3.1
+           with:
+              images: ruimarquesbb/kube-news:${{github.run_number}}
+              manifests:
+                k8s/deployment.yaml
+                 
