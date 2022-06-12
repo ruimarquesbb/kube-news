@@ -52,7 +52,7 @@ jobs:
               method: kubeconfig
               kubeconfig: ${{secrets.K8S_CONFIG}}
               
-               - name: Deploy to Kubernetes cluster
+              - name: Deploy to Kubernetes cluster
                  uses: Azure/k8s-deploy@v3.1
                   with:
                     images: ruimarquesbb/kube-news:${{github.run_number}}
